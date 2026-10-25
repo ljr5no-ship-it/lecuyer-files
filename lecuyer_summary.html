@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Lecuyer Files — Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --bg0:#08080c;--bg1:#0d0d14;--bg2:#12121c;--bg3:#171722;--bg4:#1e1e2b;
+    --line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.10);--line3:rgba(255,255,255,.16);
+    --t1:#f5f5fa;--t2:#a6a6bb;--t3:#6b6b80;
+    --brand:#8b5cf6;--brand2:#a78bfa;--deep:#6d28d9;--btn:#3b0a63;--btnhi:#4c1595;--btnline:rgba(167,139,250,.35);
+    --err:#f0436a;--ok:#22c55e;--warn:#f5a623;
+    --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--font);background:var(--bg0);color:var(--t1);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-y:auto}
+  ::selection{background:rgba(139,92,246,.35);color:#fff}
+  ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:20px;border:2px solid var(--bg0)}
+
+  .dotgrid{position:fixed;inset:0;z-index:0;pointer-events:none;background-color:var(--bg0);
+    background-image:radial-gradient(circle at center,rgba(255,255,255,.10) 1px,transparent 1.4px);background-size:26px 26px;background-position:-13px -13px;
+    -webkit-mask-image:radial-gradient(ellipse 85% 65% at 50% 28%,#000 40%,transparent 100%);mask-image:radial-gradient(ellipse 85% 65% at 50% 28%,#000 40%,transparent 100%)}
+  .glow{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;opacity:.5}
+  .glow.a{width:520px;height:520px;background:radial-gradient(circle,rgba(124,58,237,.35),transparent 70%);top:-160px;left:-120px}
+  .glow.gb{width:460px;height:460px;background:radial-gradient(circle,rgba(88,28,135,.30),transparent 70%);bottom:-160px;right:-100px}
+
+  .container{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:40px 20px 60px}
+
+  .header{text-align:center;margin-bottom:40px}
+  .header h1{font-size:2.5rem;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+  .header h1 span{background:linear-gradient(90deg,var(--brand2),#e0d4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .header .sub{color:var(--t3);font-size:13px;font-family:var(--mono)}
+  .header .credits{margin-top:12px;color:var(--brand2);font-size:12px;font-weight:700;font-family:var(--mono)}
+
+  .dance{display:flex;justify-content:center;gap:8px;margin:20px 0;padding:14px;background:var(--bg2);border:1px solid var(--line2);border-radius:12px}
+  .dance span{font-size:1.6rem;animation:vxDance 1s ease-in-out infinite}
+  .dance span:nth-child(1){animation-delay:0s}.dance span:nth-child(2){animation-delay:.1s}.dance span:nth-child(3){animation-delay:.2s}.dance span:nth-child(4){animation-delay:.3s}.dance span:nth-child(5){animation-delay:.4s}.dance span:nth-child(6){animation-delay:.5s}
+  @keyframes vxDance{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-8px) rotate(-5deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-5px) rotate(5deg)}}
+
+  .section{margin-bottom:30px}
+  .section-title{font-size:1rem;font-weight:800;color:var(--brand2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line2);font-family:var(--mono);text-transform:uppercase;letter-spacing:1.5px}
+
+  .person-card{background:linear-gradient(180deg,var(--bg2),var(--bg1));border:1px solid var(--line2);border-radius:12px;padding:20px;margin-bottom:15px;transition:border-color .15s}
+  .person-card:hover{border-color:var(--brand)}
+
+  .person-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .person-avatar{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0}
+  .person-name{font-size:1.1rem;font-weight:700;color:var(--t1)}
+  .person-meta{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+  .person-age{padding:3px 10px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);border-radius:6px;color:var(--brand2);font-size:11px;font-weight:700;font-family:var(--mono);margin-left:auto}
+
+  .info-grid{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:13px}
+  .info-key{color:var(--t3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;padding-top:3px}
+  .info-val{color:var(--t2);line-height:1.5}
+  .info-val a{color:var(--brand2);text-decoration:none}
+  .info-val a:hover{color:var(--brand);text-decoration:underline}
+
+  .tag{display:inline-block;padding:2px 8px;background:var(--bg0);border:1px solid var(--line2);border-radius:5px;font-size:10px;color:var(--t2);font-family:var(--mono);margin:2px 2px 2px 0}
+  .tag:hover{border-color:var(--brand);color:var(--brand2)}
+
+  .family-tree{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:20px;margin-bottom:20px}
+  .tree-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .tree-row:last-child{border-bottom:none}
+  .tree-name{font-weight:600;color:var(--t1);min-width:180px}
+  .tree-age{color:var(--brand2);font-family:var(--mono);font-size:12px;min-width:50px}
+  .tree-loc{color:var(--t3);font-size:12px;flex:1}
+  .tree-rel{color:var(--t2);font-size:11px}
+
+  .footer{margin-top:40px;padding:16px 20px;background:var(--bg2);border:1px solid var(--line2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .footer-credits{color:var(--brand2);font-size:12px;font-weight:700;font-family:var(--mono)}
+  .footer-credits span{color:var(--brand)}
+
+  .highlight{background:rgba(139,92,246,.08);border-left:3px solid var(--brand);padding:12px 16px;border-radius:0 8px 8px 0;margin:10px 0}
+  .highlight p{color:var(--t2);font-size:13px;line-height:1.6}
+
+  @media(max-width:600px){.info-grid{grid-template-columns:1fr}.person-header{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="dotgrid"></div><div class="glow a"></div><div class="glow gb"></div>
+
+<div class="container">
+  <div class="header">
+    <h1>THE <span>LECUYER</span> FILES</h1>
+    <div class="sub"></div>
+    <div class="credits">Made by <span>@kryzixs</span> & <span>@ykmans</span></div>
+  </div>
+
+  <div class="dance">
+    <span>💃</span><span>🕺</span><span>💃</span><span>🕺</span><span>💃</span><span>🕺</span>
+  </div>
+
+  <!-- Overview -->
+  <div class="section">
+    <div class="section-title">Overview</div>
+    <div class="highlight">
+      <p>The Lecuyer Files contain public records for <strong>13 individuals</strong>. The primary subject is <strong>Amanda Lecuyer (36)</strong> of Duluth, MN, with <strong>11 listed relatives</strong> spanning <strong>5 states</strong> (Minnesota, New Hampshire, Virginia, California, Florida) and <strong>44 associates</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Family Tree -->
+  <div class="section">
+    <div class="section-title">Family Tree — Relatives of Amanda Lecuyer</div>
+    <div class="family-tree">
+      <div class="tree-row">
+        <span class="tree-name">Gail M. Lecuyer (Skelton)</span>
+        <span class="tree-age">95</span>
+        <span class="tree-loc">Duluth, MN</span>
+        <span class="tree-rel">Senior family member</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Lori Lecuyer (Anne)</span>
+        <span class="tree-age">64</span>
+        <span class="tree-loc">Duluth, MN</span>
+        <span class="tree-rel">Amanda's relative</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Robert P. Lecuyer (Bob)</span>
+        <span class="tree-age">69</span>
+        <span class="tree-loc">Duluth, MN</span>
+        <span class="tree-rel">Amanda's relative</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Michael D. Lecuyer</span>
+        <span class="tree-age">56</span>
+        <span class="tree-loc">Exeter, NH</span>
+        <span class="tree-rel">Extended family (New England)</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Michele L. Lecuyer (Lisanti)</span>
+        <span class="tree-age">58</span>
+        <span class="tree-loc">Exeter, NH</span>
+        <span class="tree-rel">Extended family (New England)</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Shirley A. Lecuyer</span>
+        <span class="tree-age">80</span>
+        <span class="tree-loc">Barboursville, VA</span>
+        <span class="tree-rel">Extended family</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Aaron C. Lecuyer</span>
+        <span class="tree-age">36</span>
+        <span class="tree-loc">Camarillo, CA</span>
+        <span class="tree-rel">Extended family</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Alysha Lecuyer</span>
+        <span class="tree-age">29</span>
+        <span class="tree-loc">Exeter, NH</span>
+        <span class="tree-rel">Extended family (New England)</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Andrew Lecuyer</span>
+        <span class="tree-age">41</span>
+        <span class="tree-loc">Pensacola, FL</span>
+        <span class="tree-rel">Extended family</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Robert Lecuyer</span>
+        <span class="tree-age">33</span>
+        <span class="tree-loc">Unknown</span>
+        <span class="tree-rel">Listed on TPS (no additional data)</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-name">Robert Lecuyer</span>
+        <span class="tree-age">89</span>
+        <span class="tree-loc">Unknown</span>
+        <span class="tree-rel">Listed on TPS (no additional data)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amanda Lecuyer -->
+  <div class="section">
+    <div class="section-title">Amanda Lecuyer — Primary Subject (Age 36)</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#8b5cf6">AL</div>
+        <div>
+          <div class="person-name">Amanda Lecuyer</div>
+          <div class="person-meta">AKA: Amanda Marie Lecuyer, Amanda M Le • Born April 1990 • Duluth, MN</div>
+        </div>
+        <div class="person-age">36</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(218) 464-0646 (landline, Charter Fiberlink, primary); (218) 491-3126 (mobile, Verizon Wireless); (218) 724-7771 (landline, Qwest)</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">PO Box 3225, Duluth, MN 55803 (Apr 2023 – Oct 2026)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">403 N 25th Ave E, Duluth, MN 55812 (Feb 2003 – Sep 2022); 1531 Jefferson St #4, Duluth, MN 55812 (Apr 2010 – Feb 2011); 1531 Jefferson St #2, Duluth, MN 55812 (Apr 2010 – Feb 2011)</span>
+        <span class="info-key">Email</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Marital</span>
+        <span class="info-val">May be married or may have been married in the past (multiple last names found)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Gail Lecuyer (95)</span><span class="tag">Lori Lecuyer (64)</span><span class="tag">Robert Lecuyer (69)</span><span class="tag">Michael Lecuyer (56)</span><span class="tag">Michele Lecuyer (58)</span><span class="tag">Robert Lecuyer (33)</span><span class="tag">Robert Lecuyer (89)</span><span class="tag">Shirley Lecuyer (80)</span><span class="tag">Aaron Lecuyer (36)</span><span class="tag">Alysha Lecuyer (29)</span><span class="tag">Andrew Lecuyer (41)</span></span>
+        <span class="info-key">Associates</span>
+        <span class="info-val">44 total — Dallas Randall, Shelley Thygeson, Adonis Letsos, Archie Kincaid, Denine Rushing, Kimberly Swonger, Paul Letsos, Alain Knoblauch, Anna Thiede, Brenda Eng, Brian Ness, Cam Loberg, Cassie Hamlin, Charles Andrews, Cheryl Hamlin, Courtney Nagel, Craig Pluta, Dawit Biratu, Harvey Fox, Heather Kelly, Heather Nosan, Holley Morgenstern, Jacqueline Devogel, Janet Wussow, Jean Kaneski, Jennifer Wussow, Jodie Conrad, Kaitlyn Bissell, Kenneth Judkins, Khuplunmang Kipgen, Miranda McClellan, Nicholas Wight, Pamla Baxter, Paul Roen, Rebecca Felton, Spencer Johnson, Thomas Thatcher, Todd Appel, Alyson Skelton, Colette Volkmer, Eleanor Laible, Stanley Skelton, Veronica Varrall, Wendy Wesolowski</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pl2u8289u06800u96r69" target="_blank">truepeoplesearch.com/find/person/pl2u8289u06800u96r69</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gail -->
+  <div class="section">
+    <div class="section-title">Gail M. Lecuyer (Skelton) — Age 95</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#c49a3e">GL</div>
+        <div>
+          <div class="person-name">Gail M. Lecuyer</div>
+          <div class="person-meta">AKA: Gail M. Skelton • Duluth, MN</div>
+        </div>
+        <div class="person-age">95</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(715) 392-XXXX (Superior, WI, CenturyLink); (715) 394-XXXX (Superior, WI, CenturyLink)</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">PO Box, Duluth, MN (2023)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">25th Ave, Duluth, MN (2001–2021); Jefferson St, Duluth, MN (1993–2003, 2000–2001)</span>
+        <span class="info-key">Email</span>
+        <span class="info-val">Available (locked)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Robert Lecuyer (69)</span><span class="tag">Lori Lecuyer (64)</span><span class="tag">Amanda Lecuyer (36)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">1 record in Saint Louis County, MN</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">120+ network profiles</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pl6444n9u6url6r4rl6l" target="_blank">truepeoplesearch.com/find/person/pl6444n9u6url6r4rl6l</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lori -->
+  <div class="section">
+    <div class="section-title">Lori Lecuyer (Anne) — Age 64</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#22c55e">LL</div>
+        <div>
+          <div class="person-name">Lori Lecuyer</div>
+          <div class="person-meta">AKA: Lori Anne Lecuyer • Duluth, MN</div>
+        </div>
+        <div class="person-age">64</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(218) 724-XXXX (Duluth, MN, CenturyLink); (701) 724-XXXX (Forman, ND, Dickey Rural)</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">PO Box, Duluth, MN (1996–2025)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">21st Ave, Duluth, MN (1989–2025); 2nd St, Duluth, MN (2009–2025); 1st St, Duluth, MN (2006–2024); Minneapolis, MN; Two Harbors, MN</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">5 (oXXXX@q.com + 4 more)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Gail Lecuyer (95)</span><span class="tag">Robert Lecuyer (69)</span><span class="tag">Amanda Lecuyer (36)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">None in Minnesota</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/p480r0rr994nu02u42ur" target="_blank">truepeoplesearch.com/find/person/p480r0rr994nu02u42ur</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Robert P -->
+  <div class="section">
+    <div class="section-title">Robert P. Lecuyer (Bob) — Age 69</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#3b82f6">RL</div>
+        <div>
+          <div class="person-name">Robert P. Lecuyer</div>
+          <div class="person-meta">AKA: Bob Lecuyer • Duluth, MN</div>
+        </div>
+        <div class="person-age">69</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(218) 724-XXXX (Duluth, MN, CenturyLink); (701) 724-XXXX (Forman, ND); (612) 724-XXXX (St. Paul, MN, CenturyLink)</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">PO Box, Duluth, MN (1995–2025)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Logan Ave, Minneapolis, MN (1992–2015); 2nd St, Duluth, MN (2009–2024); 1st St, Duluth, MN (2006–2024); +11 more (14 total)</span>
+        <span class="info-key">Email</span>
+        <span class="info-val">oXXXX@q.com</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Gail Lecuyer (95)</span><span class="tag">Lori Lecuyer (64)</span><span class="tag">Amanda Lecuyer (36)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">2 records in Saint Louis County, MN</span>
+        <span class="info-key">Business</span>
+        <span class="info-val">Skelton-Lecuyer Properties; Wbcabinets</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pxl2lnn0268urun9l8lr2" target="_blank">truepeoplesearch.com/find/person/pxl2lnn0268urun9l8lr2</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Michael -->
+  <div class="section">
+    <div class="section-title">Michael D. Lecuyer — Age 56</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#8b5cf6">ML</div>
+        <div>
+          <div class="person-name">Michael D. Lecuyer</div>
+          <div class="person-meta">AKA: Michael Dennis Lecuyer, Michael Denis Lecuyer, Mike Lecuyer • Exeter, NH</div>
+        </div>
+        <div class="person-age">56</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(617) 593-XXXX (Boston, MA, T-Mobile); (603) 583-XXXX (Exeter, NH, Verizon Wireless) +14 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">Autumn Ln, Exeter, NH (2012)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Brentwood, NH (2012); East Kingston, NH (2009); Billerica, MA (2007); Waltham, MA; +16 more (19 total)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">6 (mXXXX@comcast.net, mXXXX@hotmail.com +4)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Robert Lecuyer (80)</span><span class="tag">Ida Lecuyer (63)</span><span class="tag">Thomas Lecuyer (59)</span><span class="tag">Kristen Lecuyer (50)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">14 in Rockingham County, NH; 15 statewide; 24 nationwide</span>
+        <span class="info-key">Business</span>
+        <span class="info-val">Blue Cross Blue Shield of MA; Iron Mountain; Microage; Bellwether Community Credit Union; Telephone Credit Union of NH</span>
+        <span class="info-key">Education</span>
+        <span class="info-val">Mesa Community College; University of Phoenix</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">51 profiles (LinkedIn, Facebook)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pn2r22uluuu99rr0nulr" target="_blank">truepeoplesearch.com/find/person/pn2r22uluuu99rr0nulr</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Michele -->
+  <div class="section">
+    <div class="section-title">Michele L. Lecuyer (Lisanti) — Age 58</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#ec4899">ML</div>
+        <div>
+          <div class="person-name">Michele L. Lecuyer</div>
+          <div class="person-meta">AKA: Michele I. Lisanti, Michele L. Martine, Michael D. Lecuyer, Michele D. Lecuyer • Exeter, NH</div>
+        </div>
+        <div class="person-age">58</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(603) 583-XXXX (Exeter, NH, Verizon); (603) 244-XXXX (Manchester, NH, Verizon) +9 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">Autumn Ln, Exeter, NH (2012) — shares address with Michael D. Lecuyer</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Mesa, AZ (1997–2022); Brentwood, NH (2009–2012); East Kingston, NH (2007–2009); +18 more (21 total)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">16 (mXXXX@yahoo.com, mXXXX@hotmail.com +14)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Robert Lecuyer (80)</span><span class="tag">Ida Lecuyer (63)</span><span class="tag">Thomas Lecuyer (59)</span><span class="tag">Kristen Lecuyer (50)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">13 in Rockingham County, NH; 14 statewide; 23 nationwide</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">31 profiles (Facebook, Instagram)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/px282r82u49rl4288ur9u" target="_blank">truepeoplesearch.com/find/person/px282r82u49rl4288ur9u</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shirley -->
+  <div class="section">
+    <div class="section-title">Shirley A. Lecuyer — Age 80</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#f97316">SL</div>
+        <div>
+          <div class="person-name">Shirley A. Lecuyer</div>
+          <div class="person-meta">Barboursville, VA</div>
+        </div>
+        <div class="person-age">80</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(540) 832-XXXX (Gordonsville, VA, Verizon); (434) 985-XXXX (Stanardsville, VA, CenturyLink) +3 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">Willy Dr, Barboursville, VA (2000–2025)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Hempstead Dr, El Paso, TX (1988–2010); Amicus Rd, Ruckersville, VA (1997–2016)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">4 (mXXXX@aol.com, rXXXX@juno.com +2)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Robert Lecuyer (81)</span></span>
+        <span class="info-key">Social</span>
+        <span class="info-val">58 profiles (LinkedIn, Facebook)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/px4nl02289r08l4u66408" target="_blank">truepeoplesearch.com/find/person/px4nl02289r08l4u66408</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aaron -->
+  <div class="section">
+    <div class="section-title">Aaron C. Lecuyer — Age 36</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#22c55e">AL</div>
+        <div>
+          <div class="person-name">Aaron C. Lecuyer</div>
+          <div class="person-meta">AKA: Aaron Christian Lecuyer • Camarillo, CA</div>
+        </div>
+        <div class="person-age">36</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(503) 473-XXXX (Portland, OR, T-Mobile) ×2 +4 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">Corte Caballos, Camarillo, CA (2017–2024)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Maple Ave, Los Angeles, CA (2016–2021); Valley Vista Dr, Camarillo, CA (2010–2025); Oakwood St, Beaverton, OR (2013); +8 more (11 total)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">7 (aXXXX@yahoo.com, aXXXX@gmail.com +5)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Court</span>
+        <span class="info-val">3 records (Ventura County, CA)</span>
+        <span class="info-key">Business</span>
+        <span class="info-val">Selco Shrewsbury Electric (Broadband Tech Network & System Ops Manager); Groutsmith (Tile Technician)</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">38 profiles (StumbleUpon, Facebook)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/p8l028lu98nll66r0800" target="_blank">truepeoplesearch.com/find/person/p8l028lu98nll66r0800</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alysha -->
+  <div class="section">
+    <div class="section-title">Alysha Lecuyer — Age 29</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#06b6d4">AL</div>
+        <div>
+          <div class="person-name">Alysha Lecuyer</div>
+          <div class="person-meta">AKA: Alysha L. Lecuyer, Alysha N. Lecuyer • Exeter, NH</div>
+        </div>
+        <div class="person-age">29</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(603) 583-XXXX (Exeter, NH, Verizon); (860) 394-XXXX (Enfield, CT, Windstream) +4 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">Autumn Ln, Exeter, NH (2013–2025) — shares address with Michael D. and Michele L. Lecuyer</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Fallon Cir, San Diego, CA (2022–2025); Kendrick St, Needham Heights, MA (2021); Alumni Dr, Exeter, NH; +3 more (6 total)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">8 (aXXXX@gmail.com +7)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Education</span>
+        <span class="info-val">Emmanuel College; Exeter High School</span>
+        <span class="info-key">Work</span>
+        <span class="info-val">Shiftmed (Enterprise Business Development); Boston Children's Hospital; Exeter Hospital; Brewster Ambulance; others</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">92 profiles (Facebook, LinkedIn)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pl89l0uu0rr46909486n" target="_blank">truepeoplesearch.com/find/person/pl89l0uu0rr46909486n</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Andrew -->
+  <div class="section">
+    <div class="section-title">Andrew Lecuyer — Age 41</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#14b8a6">AL</div>
+        <div>
+          <div class="person-name">Andrew Lecuyer</div>
+          <div class="person-meta">AKA: Andrew Stephen Lecuyer, Andrew S. Lecuyer Amber Lecuyer • Pensacola, FL</div>
+        </div>
+        <div class="person-age">41</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Phones</span>
+        <span class="info-val">(662) 510-XXXX (Southaven, MS, AT&T VOIP); (901) 239-XXXX (Memphis, TN, Cellular South) +3 more</span>
+        <span class="info-key">Current Addr</span>
+        <span class="info-val">12th Ave, Pensacola, FL (2024–2026)</span>
+        <span class="info-key">Prev Addrs</span>
+        <span class="info-val">Cresthill Dr, Southaven, MS (2015–2026); Brookhaven Dr, Southaven, MS (2014–2024); Golden Oaks Loop, Southaven, MS (2012–2017); +13 more (15 total)</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">3 (aXXXX@gmail.com, sXXXX@gmail.com +1)</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val"><span class="tag">Wendy Wesolowski (64, Germantown, TN)</span></span>
+        <span class="info-key">Court</span>
+        <span class="info-val">5 records (Escambia County, FL)</span>
+        <span class="info-key">Social</span>
+        <span class="info-val">9 profiles (Facebook, LinkedIn, Pinterest, Amazon)</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/p6l69098ur4n8l96ll92" target="_blank">truepeoplesearch.com/find/person/p6l69098ur4n8l96ll92</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Robert 33 & 89 -->
+  <div class="section">
+    <div class="section-title">Robert Lecuyer — Age 33 & Age 89 (TPS Only)</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#475569">RL</div>
+        <div>
+          <div class="person-name">Robert Lecuyer (33) & Robert Lecuyer (89)</div>
+          <div class="person-meta">Listed as Amanda's relatives • No additional data retrieved</div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Robert (33)</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pu6294lur4nrl6l8lu42" target="_blank">truepeoplesearch.com/find/person/pu6294lur4nrl6l8lu42</a></span>
+        <span class="info-key">Robert (89)</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/px86ruur860ln002n028r" target="_blank">truepeoplesearch.com/find/person/px86ruur860ln002n028r</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amanda Record 2 -->
+  <div class="section">
+    <div class="section-title">Amanda Lecuyer — Record 2 (Sparser) — Age 36</div>
+    <div class="person-card">
+      <div class="person-header">
+        <div class="person-avatar" style="background:#6366f1">A2</div>
+        <div>
+          <div class="person-name">Amanda Lecuyer (Record 2)</div>
+          <div class="person-meta">AKA: Amanda M Lecuyer • Born April 1990 • Duluth, MN</div>
+        </div>
+        <div class="person-age">36</div>
+      </div>
+      <div class="info-grid">
+        <span class="info-key">Address</span>
+        <span class="info-val">PO Box 3225, Duluth, MN 55803 (Mar 2023 – Oct 2026)</span>
+        <span class="info-key">Marital</span>
+        <span class="info-val">Does not appear to be married based on available public records</span>
+        <span class="info-key">Phones</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Emails</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Relatives</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Associates</span>
+        <span class="info-val">None listed</span>
+        <span class="info-key">Profile</span>
+        <span class="info-val"><a href="https://www.truepeoplesearch.com/find/person/pxn6r8l9nr4nln286lu2" target="_blank">truepeoplesearch.com/find/person/pxn6r8l9nr4nln286lu2</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Connections -->
+  <div class="section">
+    <div class="section-title">Key Connections & Notes</div>
+    <div class="highlight">
+      <p><strong>Minnesota Clan (Duluth):</strong> Gail M. Lecuyer (95), Lori Lecuyer (64), Robert P. Lecuyer (69), and Amanda Lecuyer (36) all reside in Duluth, MN. Gail, Lori, and Robert share the same PO Box in Duluth. Robert and Lori co-reside at 403 N 25th Ave E, Duluth, MN 55812 (phone: 218-724-7771). Business: Skelton-Lecuyer Properties.</p>
+    </div>
+    <div class="highlight">
+      <p><strong>New England Clan (Exeter, NH):</strong> Michael D. Lecuyer (56), Michele L. Lecuyer (58), and Alysha Lecuyer (29) all share the Autumn Ln address in Exeter, NH. Their relatives include Robert Lecuyer (80, Billerica, MA), Ida Lecuyer (63, Exeter, NH), Thomas Lecuyer (59, Chandler, AZ), and Kristen Lecuyer (50, Henrico, VA).</p>
+    </div>
+    <div class="highlight">
+      <p><strong>Andrew Lecuyer (41)</strong> of Pensacola, FL lists <strong>Wendy Wesolowski (64, Germantown, TN)</strong> as a relative. Wendy Wesolowski was also listed as an associate of Amanda Lecuyer, connecting the Florida and Minnesota branches.</p>
+    </div>
+    <div class="highlight">
+      <p><strong>Shirley A. Lecuyer (80)</strong> of Barboursville, VA lists <strong>Robert Lecuyer (81, Barboursville, VA)</strong> as a relative.</p>
+    </div>
+    <div class="highlight">
+      <p><strong>Aaron C. Lecuyer (36)</strong> of Camarillo, CA has no relatives listed but has 3 court records in Ventura County, CA and works at Selco Shrewsbury Electric and Groutsmith.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-credits">Made by <span>@kryzixs</span> & <span>@ykmans</span></span>
+  </div>
+</div>
+</body>
+</html>
